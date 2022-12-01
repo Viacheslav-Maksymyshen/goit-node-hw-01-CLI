@@ -5,27 +5,33 @@ const {
   addContact,
 } = require("./contacts");
 
-async function fileOperation({ action, id, name, email, phone }) {
+const argv = require("yargs").argv;
+
+async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
-      const data = await listContacts();
-      console.table(data);
+      const allContacts = await listContacts();
+      console.table(allContacts);
       break;
+
     case "get":
-      await getContactById(id);
+      const oneContact = await getContactById(id);
+      console.table(oneContact);
       break;
 
     case "add":
-      await addContact(name, email, phone);
+      const newContact = await addContact(name, email, phone);
+      console.table(newContact);
       break;
 
     case "remove":
-      await removeContact(id);
+      const deleteContact = await removeContact(id);
+      console.table(deleteContact);
       break;
 
     default:
-      console.log("Unknown action type!");
+      console.warn("\x1B[31m Unknown action type!");
   }
 }
 
-fileOperation({ action: "list" });
+invokeAction(argv);
